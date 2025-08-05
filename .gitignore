@@ -88,6 +88,11 @@ fastlane/test_output
 
 iOSInjectionProject/
 
+# Project planning documents (not needed in repo)
+implementation.md
+MacBoard_PRD.md
+MacBoard_UI_UX.md
+
 # macOS
 .DS_Store
 .AppleDouble
