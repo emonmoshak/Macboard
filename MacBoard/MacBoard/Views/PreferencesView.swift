@@ -1,5 +1,4 @@
 import SwiftUI
-import ServiceManagement
 
 struct PreferencesView: View {
     @EnvironmentObject private var clipboardStore: ClipboardStore

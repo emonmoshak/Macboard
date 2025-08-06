@@ -112,10 +112,6 @@ struct ContentView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(NSColor.windowBackgroundColor))
-        .onAppear {
-            // Connect the clipboard monitor to the store
-            clipboardMonitor.setClipboardStore(clipboardStore)
-        }
     }
 }
 

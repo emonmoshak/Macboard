@@ -21,9 +21,8 @@ class ClipboardMonitor: ObservableObject {
     init() {
         lastChangeCount = pasteboard.changeCount
         
-        if monitoringEnabled {
-            startMonitoring()
-        }
+        // Don't start monitoring immediately - wait for clipboard store to be connected
+        // The app will call startMonitoring() after connecting the store
     }
     
     // MARK: - Monitoring Control
@@ -93,6 +92,11 @@ class ClipboardMonitor: ObservableObject {
     /// Set the clipboard store dependency
     func setClipboardStore(_ store: ClipboardStore) {
         self.clipboardStore = store
+        
+        // Start monitoring now that we have a store to save to
+        if monitoringEnabled && !isMonitoring {
+            startMonitoring()
+        }
     }
     
     /// Get current clipboard content preview

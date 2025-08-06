@@ -6,6 +6,14 @@ struct MacBoardApp: App {
     @StateObject private var clipboardMonitor = ClipboardMonitor()
     @StateObject private var clipboardStore = ClipboardStore()
     
+    init() {
+        // Connect clipboard monitor to store on app initialization
+        // Use async to avoid issues with @StateObject initialization timing
+        DispatchQueue.main.async {
+            clipboardMonitor.setClipboardStore(clipboardStore)
+        }
+    }
+    
     var body: some Scene {
         MenuBarExtra("MacBoard", systemImage: "clipboard") {
             MenuBarView()
@@ -17,30 +25,31 @@ struct MacBoardApp: App {
         Settings {
             PreferencesView()
                 .environmentObject(clipboardStore)
+                .environmentObject(clipboardMonitor)
         }
+        
+        // Debug window (hidden by default, can be shown via Window menu)
+        Window("MacBoard Debug", id: "debug") {
+            ContentView()
+                .environmentObject(clipboardMonitor)
+                .environmentObject(clipboardStore)
+        }
+        .windowStyle(.hiddenTitleBar)
+        .windowResizability(.contentSize)
+        .defaultPosition(.center)
+        .commandsRemoved()
     }
 }
 
-// Menu bar manager to handle global state
-class MenuBarManager: ObservableObject {
-    private var statusItem: NSStatusItem?
-    
-    init() {
-        setupMenuBar()
+// MARK: - App Delegate for additional macOS integration
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        // Hide dock icon to make it menu bar only
+        NSApp.setActivationPolicy(.accessory)
     }
     
-    private func setupMenuBar() {
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-        
-        if let button = statusItem?.button {
-            button.image = NSImage(systemSymbolName: "clipboard", accessibilityDescription: "MacBoard")
-            button.action = #selector(togglePopover)
-            button.target = self
-        }
-    }
-    
-    @objc func togglePopover() {
-        // Handle popover toggle
-        print("MacBoard menu clicked")
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        // Keep app running even when all windows are closed
+        return false
     }
 }
