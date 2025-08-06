@@ -83,6 +83,23 @@ cd macboard
 
 # Open in Xcode
 open MacBoard.xcodeproj
+
+# Quick build test (optional)
+chmod +x verify_build.sh
+./verify_build.sh
+```
+
+## 🔧 Troubleshooting
+
+### Permission Denied Error
+If you get "permission denied" when running scripts:
+```bash
+# Option 1: Fix permissions
+chmod +x verify_build.sh
+./verify_build.sh
+
+# Option 2: Run with bash
+bash verify_build.sh
 ```
 
 ## 📖 Documentation
